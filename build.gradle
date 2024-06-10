@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.0'
 	id 'io.spring.dependency-management' version '1.1.5'
+	id 'com.github.node-gradle.node' version '7.0.0' // Node 플러그인 추가
 }
 
 group = 'com.maple'
@@ -32,6 +33,24 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok:1.18.32'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
+
+node {
+	version = '20.11.0'
+	npmVersion = '10.2.4'
+	download = true
+}
+
+task installTailwind(type: NpmTask) {
+	description = "Install Tailwind CSS and its dependencies"
+	args = ['install']
+}
+
+task buildTailwind(type: NpmTask) {
+	description = "Build Tailwind CSS"
+	args = ['run', 'build:css']
+	dependsOn installTailwind
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()

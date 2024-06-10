@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind CSS Template</title>
+    <link th:href="@{/css/output.css}" rel="stylesheet">
+    <!-- Tailwind CSS를 빌드한 결과물 (output.css)을 참조 -->
+    <script defer th:src="@{/js/dark-mode-toggle.js}"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen dark:bg-gray-900 dark:text-gray-100">
+
+<!-- 헤더 -->
+<header class="bg-blue-600 text-white dark:bg-gray-800 dark:text-gray-200 py-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Maple Boss Now</h1>
+        <nav class="space-x-4">
+            <a href="#" class="hover:underline">Home</a>
+            <a href="#" class="hover:underline">About</a>
+            <a href="#" class="hover:underline">Services</a>
+            <a href="#" class="hover:underline">Contact</a>
+        </nav>
+    </div>
+</header>
+
+<!-- 메인 레이아웃 -->
+<div class="container mx-auto flex flex-1 mt-8 mb-4">
+
+    <!-- 사이드바 -->
+    <aside class="w-1/4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+        <ul class="space-y-2">
+            <li><a href="#" class="block py-2 px-3 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Dashboard</a></li>
+            <li><a href="#" class="block py-2 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Profile</a></li>
+            <li><a href="#" class="block py-2 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Settings</a></li>
+            <li><a href="#" class="block py-2 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Logout</a></li>
+        </ul>
+    </aside>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="flex-1 ml-4">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4">Welcome to the Dashboard</h2>
+            <p class="mb-4">This is a sample dashboard page using Tailwind CSS with Thymeleaf in a Spring Boot application.</p>
+
+            <!-- 카드 섹션 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Card 1</h3>
+                    <p class="text-gray-700 dark:text-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+                <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Card 2</h3>
+                    <p class="text-gray-700 dark:text-gray-300">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Card 3</h3>
+                    <p class="text-gray-700 dark:text-gray-300">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- 푸터 -->
+<footer class="bg-gray-800 dark:bg-gray-900 text-white dark:text-gray-200 py-4 mt-8">
+    <div class="container mx-auto text-center">
+        <p>&copy; 2024 Your Company. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- 다크모드 토글 버튼 -->
+<button id="dark-mode-toggle" class="fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-md hover:bg-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition">
+    <!--    sun-icon-->
+    <img id="sun-icon" th:src="@{../icons/sun.svg}" class="hidden w-6 h-6" alt="Sun Icon">
+    <!--    moon-icon-->
+    <img id="moon-icon" th:src="@{../icons/moon.svg}" class="w-6 h-6" alt="Moon Icon">
+</button>
+
+
+</body>
+</html>
