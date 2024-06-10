@@ -1,5 +1,7 @@
 package com.maple.maple_boss_now.openapi.characterinfo;
 
+import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
+import com.maple.maple_boss_now.dto.CharacterInfoResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +42,7 @@ public class CharacterAPITest {
 
         String url = UriComponentsBuilder.fromHttpUrl(apiDomain + "/maplestory/v1/id")
                 .queryParam("character_name", characterName)
-                .build()  // 인코딩은 여기서 수행됩니다.
+                .build()
                 .toUriString();
 
         // 요청 헤더 설정
@@ -51,13 +53,53 @@ public class CharacterAPITest {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         // When - API 호출
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        ResponseEntity<CharacterInfoResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                CharacterInfoResponse.class
+        );
 
         // Then - 응답 검증
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody()).contains("ocid");
+        assertThat(response.getBody().getOcid()).isEqualTo("a1130838a07cb1565cad1e9bf86293b6");
 
-        System.out.println("Response: " + response.getBody());
+        log.debug("Response OCID: {}", response.getBody().getOcid());
+    }
+
+    @Test
+    void getCharacterBasicInfo() throws Exception {
+        // Given
+        String ocid = "a1130838a07cb1565cad1e9bf86293b6"; // 이전 테스트에서 얻은 ocid
+        String date = "2024-06-09"; // 조회 기준일
+
+        String url = UriComponentsBuilder.fromHttpUrl(apiDomain + "/maplestory/v1/character/basic")
+                .queryParam("ocid", ocid)
+                .queryParam("date", date)
+                .build()
+                .toUriString();
+
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("x-nxopen-api-key", apiKey);
+
+        // 요청 엔티티 생성
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // When - API 호출
+        ResponseEntity<CharacterBasicInfoResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                CharacterBasicInfoResponse.class
+        );
+
+        // Then - 응답 검증
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getCharacterName()).isEqualTo("붓면");
+        log.info("response.getBody() :  {} ", response.getBody());
+        log.debug("Response Character Name: {}", response.getBody().getCharacterName());
     }
 }
