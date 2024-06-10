@@ -2,6 +2,7 @@ package com.maple.maple_boss_now.service;
 
 import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
 import com.maple.maple_boss_now.dto.CharacterInfoResponse;
+import com.maple.maple_boss_now.dto.CharacterStatInfoResponse;
 import com.maple.maple_boss_now.exception.CharacterNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -44,21 +45,23 @@ public class CharacterService {
                 .build()
                 .toUriString();
     }
-
     /**
      * 캐릭터의 OCID 정보를 조회합니다.
      * @param characterName
      * @return
      */
     public CharacterInfoResponse getCharacterOcidInfo(String characterName) {
-        String url = createUrl("/maplestory/v1/id", characterName, null);
+        String url = UriComponentsBuilder.fromHttpUrl(apiDomain + "/maplestory/v1/id")
+                .queryParam("character_name", characterName)
+                .build()
+                .toUriString();
         ResponseEntity<CharacterInfoResponse> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 createRequestEntity(),
                 CharacterInfoResponse.class
         );
-        log.info("response: {}", response);
+
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {
@@ -84,11 +87,29 @@ public class CharacterService {
                 createRequestEntity(),
                 CharacterBasicInfoResponse.class
         );
-        log.info("response: {}", response);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {
             throw new CharacterNotFoundException("Failed to fetch character basic info: " + response.getStatusCode());
+        }
+    }
+
+    public CharacterStatInfoResponse getCharacterStatInfo(String ocid) {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String date = yesterday.format(formatter);
+
+        String url = createUrl("/maplestory/v1/character/stat", ocid, date);
+        ResponseEntity<CharacterStatInfoResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                createRequestEntity(),
+                CharacterStatInfoResponse.class
+        );
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new CharacterNotFoundException("Failed to fetch character stat info: " + response.getStatusCode());
         }
     }
 

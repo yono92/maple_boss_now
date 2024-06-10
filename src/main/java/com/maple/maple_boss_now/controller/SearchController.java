@@ -1,6 +1,7 @@
 package com.maple.maple_boss_now.controller;
 
 import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
+import com.maple.maple_boss_now.dto.CharacterDetailsResponse;
 import com.maple.maple_boss_now.service.CharacterService;
 import com.maple.maple_boss_now.service.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/character")
-    public ResponseEntity<CharacterBasicInfoResponse> getCharacterInfo(@RequestParam String characterName) {
-        return ResponseEntity.ok(searchService.getCharacterBasicInfoByName(characterName));
+    public ResponseEntity<CharacterDetailsResponse> getCharacterInfo(@RequestParam String characterName) {
+        return ResponseEntity.ok(searchService.getCharacterDetailsByName(characterName));
     }
 
 }

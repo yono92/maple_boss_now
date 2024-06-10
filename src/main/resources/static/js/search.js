@@ -8,29 +8,72 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
         const query = searchQuery.value.trim();
         if (query) {
-            const response = await fetch(`/api/v1/search/character?characterName=${encodeURIComponent(query)}`);
-            if (response.ok) {
-                const data = await response.json();
-                displayResults(data);
-            } else {
+            try {
+                const response = await fetch(`/api/v1/search/character?characterName=${encodeURIComponent(query)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    displayResults(data);
+                } else {
+                    displayNoResults();
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
                 displayNoResults();
             }
         }
     });
 
     function displayResults(data) {
+        const basicInfo = data.characterBasicInfo;
+        const statInfo = data.characterStatInfo;
         resultContainer.innerHTML = `
-            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
-                <h4 class="text-lg font-semibold">${data.characterName}</h4>
-                <p><strong>World:</strong> ${data.worldName}</p>
-                <p><strong>Gender:</strong> ${data.characterGender}</p>
-                <p><strong>Class:</strong> ${data.characterClass}</p>
-                <p><strong>Level:</strong> ${data.characterLevel}</p>
-                <p><strong>EXP:</strong> ${data.characterExp}</p>
-                <p><strong>EXP Rate:</strong> ${data.characterExpRate}</p>
-                <p><strong>Guild:</strong> ${data.characterGuildName}</p>
-                <img src="${data.characterImage}" alt="Character Image" class="w-24 h-24 rounded-lg mt-2">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-center mb-4">
+                <img src="${basicInfo.character_image}" alt="Character Image" class="w-24 h-24 rounded-full">
             </div>
+            <div class="text-center mb-6">
+                <h4 class="text-xl font-bold text-gray-800 dark:text-gray-100">${basicInfo.character_name}</h4>
+                <p class="text-gray-600 dark:text-gray-400">${basicInfo.world_name}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Gender</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_gender}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Class</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_class}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Class Level</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_class_level}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Level</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_level}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">EXP</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_exp}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">EXP Rate</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_exp_rate}</p>
+                </div>
+                <div class="col-span-2">
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Guild</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_guild_name}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                ${statInfo.finalStat.map(stat => `
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">${stat.statName}</p>
+                        <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${stat.statValue}</p>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
         `;
         resultContainer.classList.remove("hidden");
         noResults.classList.add("hidden");

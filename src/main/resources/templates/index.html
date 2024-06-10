@@ -39,24 +39,7 @@
     <!-- 메인 콘텐츠 -->
     <main class="flex-1 ml-4">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-<!--            <h2 class="text-2xl font-bold mb-4">Welcome to the Dashboard</h2>-->
-<!--            <p class="mb-4">This is a sample dashboard page using Tailwind CSS with Thymeleaf in a Spring Boot application.</p>-->
 
-<!--            &lt;!&ndash; 카드 섹션 &ndash;&gt;-->
-<!--            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">-->
-<!--                <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg shadow-md">-->
-<!--                    <h3 class="text-xl font-semibold mb-2">Card 1</h3>-->
-<!--                    <p class="text-gray-700 dark:text-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>-->
-<!--                </div>-->
-<!--                <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg shadow-md">-->
-<!--                    <h3 class="text-xl font-semibold mb-2">Card 2</h3>-->
-<!--                    <p class="text-gray-700 dark:text-gray-300">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>-->
-<!--                </div>-->
-<!--                <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg shadow-md">-->
-<!--                    <h3 class="text-xl font-semibold mb-2">Card 3</h3>-->
-<!--                    <p class="text-gray-700 dark:text-gray-300">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
-<!--                </div>-->
-<!--            </div>-->
 
             <!-- 검색 섹션 -->
             <div id="search-section" class="mb-8">
@@ -66,24 +49,10 @@
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500">Search</button>
                 </form>
             </div>
-
-
-<!--            &lt;!&ndash; 검색 결과 섹션 &ndash;&gt;-->
-<!--            <div id="results">-->
-<!--                <h3 class="text-xl font-semibold mb-2">Search Results</h3>-->
-<!--                <ul th:if="${results != null} and ${results.size()} > 0" class="space-y-4">-->
-<!--                    <li th:each="result : ${results}" class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">-->
-<!--                        <h4 class="text-lg font-semibold" th:text="${result.title}"></h4>-->
-<!--                        <p th:text="${result.description}"></p>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--                <p th:if="${results != null} and ${results.size()} == 0" class="text-gray-500 dark:text-gray-400">No results found</p>-->
-
-<!--            </div>-->
             <!-- 검색 결과 섹션 -->
             <div id="results">
                 <h3 class="text-xl font-semibold mb-2">Search Results</h3>
-                <div id="result-container"></div>
+                <div id="result-container" class="space-y-4 hidden"></div>
                 <p id="no-results" class="text-gray-500 dark:text-gray-400 hidden">No results found</p>
             </div>
         </div>
