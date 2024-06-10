@@ -106,6 +106,7 @@ public class CharacterService {
                 createRequestEntity(),
                 CharacterStatInfoResponse.class
         );
+        log.info("CharacterStatInfoResponse: {}", response);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {

@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function displayResults(data) {
         const basicInfo = data.characterBasicInfo;
         const statInfo = data.characterStatInfo;
+        const finalStat = statInfo?.finalStat || [];
         resultContainer.innerHTML = `
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <div class="flex items-center justify-center mb-4">
@@ -65,15 +66,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_guild_name}</p>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                ${statInfo.finalStat.map(stat => `
-                    <div>
-                        <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">${stat.statName}</p>
-                        <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${stat.statValue}</p>
+                <div class="mt-6">
+                <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100">Character Stats</h4>
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        ${finalStat.map(stat => `
+                            <div>
+                                <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">${stat.stat_name}</p>
+                                <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${stat.stat_value}</p>
+                            </div>
+                        `).join('')}
                     </div>
-                `).join('')}
-            </div>
-        </div>
+                </div>
+        </div> 
         `;
         resultContainer.classList.remove("hidden");
         noResults.classList.add("hidden");

@@ -23,7 +23,6 @@ public class SearchService {
         CharacterDetailsResponse response = new CharacterDetailsResponse();
         response.setCharacterBasicInfo(characterBasicInfo);
         response.setCharacterStatInfo(characterStatInfo);
-        log.info("CharacterDetailsResponse: {}", response);
         return response;
     }
 }
