@@ -12,4 +12,9 @@ public class GlobalExceptionHandler {
         // 예외 메시지를 사용하여 HTTP 상태 코드 404와 함께 응답을 반환합니다.
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+    }
 }

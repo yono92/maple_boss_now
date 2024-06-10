@@ -4,6 +4,8 @@ import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
 import com.maple.maple_boss_now.dto.CharacterInfoResponse;
 import com.maple.maple_boss_now.exception.CharacterNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class CharacterService {
 
+    private static final Logger log = LoggerFactory.getLogger(CharacterService.class);
     private final RestTemplate restTemplate;
 
     @Value("${api.domain}")
@@ -55,7 +58,7 @@ public class CharacterService {
                 createRequestEntity(),
                 CharacterInfoResponse.class
         );
-
+        log.info("response: {}", response);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {
@@ -81,7 +84,7 @@ public class CharacterService {
                 createRequestEntity(),
                 CharacterBasicInfoResponse.class
         );
-
+        log.info("response: {}", response);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {

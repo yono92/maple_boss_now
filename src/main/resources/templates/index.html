@@ -7,6 +7,7 @@
     <link th:href="@{/css/output.css}" rel="stylesheet">
     <!-- Tailwind CSS를 빌드한 결과물 (output.css)을 참조 -->
     <script defer th:src="@{/js/dark-mode-toggle.js}"></script>
+    <script defer th:src="@{/js/search.js}"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen dark:bg-gray-900 dark:text-gray-100">
 
@@ -16,9 +17,8 @@
         <h1 class="text-2xl font-bold">Maple Boss Now</h1>
         <nav class="space-x-4">
             <a href="#" class="hover:underline">Home</a>
-            <a href="#" class="hover:underline">About</a>
-            <a href="#" class="hover:underline">Services</a>
-            <a href="#" class="hover:underline">Contact</a>
+            <a href="#" class="hover:underline">Boss</a>
+
         </nav>
     </div>
 </header>
@@ -29,8 +29,8 @@
     <!-- 사이드바 -->
     <aside class="w-1/4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
         <ul class="space-y-2">
-            <li><a href="#" class="block py-2 px-3 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Dashboard</a></li>
-            <li><a href="#" class="block py-2 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Profile</a></li>
+            <li><a href="#" class="block py-2 px-3 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Profile</a></li>
+            <li><a href="#" class="block py-2 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Item</a></li>
             <li><a href="#" class="block py-2 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Settings</a></li>
             <li><a href="#" class="block py-2 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">Logout</a></li>
         </ul>
@@ -39,23 +39,52 @@
     <!-- 메인 콘텐츠 -->
     <main class="flex-1 ml-4">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Welcome to the Dashboard</h2>
-            <p class="mb-4">This is a sample dashboard page using Tailwind CSS with Thymeleaf in a Spring Boot application.</p>
+<!--            <h2 class="text-2xl font-bold mb-4">Welcome to the Dashboard</h2>-->
+<!--            <p class="mb-4">This is a sample dashboard page using Tailwind CSS with Thymeleaf in a Spring Boot application.</p>-->
 
-            <!-- 카드 섹션 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold mb-2">Card 1</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </div>
-                <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold mb-2">Card 2</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-                <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold mb-2">Card 3</h3>
-                    <p class="text-gray-700 dark:text-gray-300">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div>
+<!--            &lt;!&ndash; 카드 섹션 &ndash;&gt;-->
+<!--            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">-->
+<!--                <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg shadow-md">-->
+<!--                    <h3 class="text-xl font-semibold mb-2">Card 1</h3>-->
+<!--                    <p class="text-gray-700 dark:text-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>-->
+<!--                </div>-->
+<!--                <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg shadow-md">-->
+<!--                    <h3 class="text-xl font-semibold mb-2">Card 2</h3>-->
+<!--                    <p class="text-gray-700 dark:text-gray-300">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>-->
+<!--                </div>-->
+<!--                <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg shadow-md">-->
+<!--                    <h3 class="text-xl font-semibold mb-2">Card 3</h3>-->
+<!--                    <p class="text-gray-700 dark:text-gray-300">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <!-- 검색 섹션 -->
+            <div id="search-section" class="mb-8">
+                <h3 class="text-xl font-semibold mb-2">Profile Search</h3>
+                <form id="search-form" class="flex space-x-4">
+                    <input id="search-query" type="text" name="query" placeholder="Search profiles..." class="flex-1 p-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200" required>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500">Search</button>
+                </form>
+            </div>
+
+
+<!--            &lt;!&ndash; 검색 결과 섹션 &ndash;&gt;-->
+<!--            <div id="results">-->
+<!--                <h3 class="text-xl font-semibold mb-2">Search Results</h3>-->
+<!--                <ul th:if="${results != null} and ${results.size()} > 0" class="space-y-4">-->
+<!--                    <li th:each="result : ${results}" class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">-->
+<!--                        <h4 class="text-lg font-semibold" th:text="${result.title}"></h4>-->
+<!--                        <p th:text="${result.description}"></p>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--                <p th:if="${results != null} and ${results.size()} == 0" class="text-gray-500 dark:text-gray-400">No results found</p>-->
+
+<!--            </div>-->
+            <!-- 검색 결과 섹션 -->
+            <div id="results">
+                <h3 class="text-xl font-semibold mb-2">Search Results</h3>
+                <div id="result-container"></div>
+                <p id="no-results" class="text-gray-500 dark:text-gray-400 hidden">No results found</p>
             </div>
         </div>
     </main>
@@ -63,8 +92,8 @@
 
 <!-- 푸터 -->
 <footer class="bg-gray-800 dark:bg-gray-900 text-white dark:text-gray-200 py-4 mt-8">
-    <div class="container mx-auto text-center">
-        <p>&copy; 2024 Your Company. All rights reserved.</p>
+    <div class="container mx-auto text-center">4
+        <p>&copy; 2024 Maple Boss Now. All rights reserved.</p>
     </div>
 </footer>
 
@@ -75,7 +104,5 @@
     <!--    moon-icon-->
     <img id="moon-icon" th:src="@{../icons/moon.svg}" class="w-6 h-6" alt="Moon Icon">
 </button>
-
-
 </body>
 </html>

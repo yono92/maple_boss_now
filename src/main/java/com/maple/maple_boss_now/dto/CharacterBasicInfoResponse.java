@@ -1,9 +1,12 @@
 package com.maple.maple_boss_now.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor // 기본 생성자
 public class CharacterBasicInfoResponse {
     private String date;
     @JsonProperty("character_name")
