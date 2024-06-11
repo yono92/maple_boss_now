@@ -139,7 +139,7 @@ public class CharacterService {
                 createRequestEntity(),
                 CharacterEquipInfoResponse.class
         );
-        log.info("CharacterEquipInfoResponse: {}", response);
+//        log.info("CharacterEquipInfoResponse: {}", response);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {
