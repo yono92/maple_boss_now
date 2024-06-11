@@ -3,30 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tailwind CSS Template</title>
+    <title>Maple Boss Now</title>
     <link th:href="@{/css/output.css}" rel="stylesheet">
-    <!-- Tailwind CSS를 빌드한 결과물 (output.css)을 참조 -->
     <script defer th:src="@{/js/dark-mode-toggle.js}"></script>
     <script defer th:src="@{/js/search.js}"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen dark:bg-gray-900 dark:text-gray-100">
 
-<!-- 헤더 -->
+<!-- Header -->
 <header class="bg-blue-600 text-white dark:bg-gray-800 dark:text-gray-200 py-4 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
         <h1 class="text-2xl font-bold">Maple Boss Now</h1>
         <nav class="space-x-4">
             <a href="#" class="hover:underline">Home</a>
             <a href="#" class="hover:underline">Boss</a>
-
         </nav>
     </div>
 </header>
 
-<!-- 메인 레이아웃 -->
+<!-- Main Layout -->
 <div class="container mx-auto flex flex-1 mt-8 mb-4">
 
-    <!-- 사이드바 -->
+    <!-- Sidebar -->
     <aside class="w-1/4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
         <ul class="space-y-2">
             <li><a href="#" class="block py-2 px-3 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">Profile</a></li>
@@ -36,12 +34,11 @@
         </ul>
     </aside>
 
-    <!-- 메인 콘텐츠 -->
+    <!-- Main Content -->
     <main class="flex-1 ml-4">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
 
-
-            <!-- 검색 섹션 -->
+            <!-- Search Section -->
             <div id="search-section" class="mb-8">
                 <h3 class="text-xl font-semibold mb-2">Profile Search</h3>
                 <form id="search-form" class="flex space-x-4">
@@ -49,7 +46,7 @@
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500">Search</button>
                 </form>
             </div>
-            <!-- 검색 결과 섹션 -->
+            <!-- Search Results Section -->
             <div id="results">
                 <h3 class="text-xl font-semibold mb-2">Search Results</h3>
                 <div id="result-container" class="space-y-4 hidden"></div>
@@ -59,18 +56,16 @@
     </main>
 </div>
 
-<!-- 푸터 -->
+<!-- Footer -->
 <footer class="bg-gray-800 dark:bg-gray-900 text-white dark:text-gray-200 py-4 mt-8">
-    <div class="container mx-auto text-center">4
+    <div class="container mx-auto text-center">
         <p>&copy; 2024 Maple Boss Now. All rights reserved.</p>
     </div>
 </footer>
 
-<!-- 다크모드 토글 버튼 -->
+<!-- Dark Mode Toggle Button -->
 <button id="dark-mode-toggle" class="fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-md hover:bg-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition">
-    <!--    sun-icon-->
     <img id="sun-icon" th:src="@{../icons/sun.svg}" class="hidden w-6 h-6" alt="Sun Icon">
-    <!--    moon-icon-->
     <img id="moon-icon" th:src="@{../icons/moon.svg}" class="w-6 h-6" alt="Moon Icon">
 </button>
 </body>
