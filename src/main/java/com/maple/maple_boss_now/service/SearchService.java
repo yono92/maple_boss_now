@@ -1,9 +1,6 @@
 package com.maple.maple_boss_now.service;
 
-import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
-import com.maple.maple_boss_now.dto.CharacterDetailsResponse;
-import com.maple.maple_boss_now.dto.CharacterInfoResponse;
-import com.maple.maple_boss_now.dto.CharacterStatInfoResponse;
+import com.maple.maple_boss_now.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,9 +17,11 @@ public class SearchService {
         String ocid = characterInfo.getOcid();
         CharacterBasicInfoResponse characterBasicInfo = characterService.getCharacterBasicInfo(ocid);
         CharacterStatInfoResponse characterStatInfo = characterService.getCharacterStatInfo(ocid);
+        CharacterEquipInfoResponse characterEquipInfo = characterService.getCharacterEquipInfo(ocid);
         CharacterDetailsResponse response = new CharacterDetailsResponse();
         response.setCharacterBasicInfo(characterBasicInfo);
         response.setCharacterStatInfo(characterStatInfo);
+        response.setCharacterEquipInfo(characterEquipInfo);
         return response;
     }
 }

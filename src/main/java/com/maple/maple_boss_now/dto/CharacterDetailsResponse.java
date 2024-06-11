@@ -12,5 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class CharacterDetailsResponse {
     private CharacterBasicInfoResponse characterBasicInfo;
     private CharacterStatInfoResponse characterStatInfo;
+    private CharacterEquipInfoResponse characterEquipInfo;
 
 }

@@ -1,6 +1,7 @@
 package com.maple.maple_boss_now.service;
 
 import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
+import com.maple.maple_boss_now.dto.CharacterEquipInfoResponse;
 import com.maple.maple_boss_now.dto.CharacterInfoResponse;
 import com.maple.maple_boss_now.dto.CharacterStatInfoResponse;
 import com.maple.maple_boss_now.exception.CharacterNotFoundException;
@@ -94,6 +95,12 @@ public class CharacterService {
         }
     }
 
+    /**
+     * 캐릭터의 스탯 정보를 조회합니다.
+     * @param ocid
+     * @return
+     * @throws CharacterNotFoundException
+     */
     public CharacterStatInfoResponse getCharacterStatInfo(String ocid) {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -114,4 +121,29 @@ public class CharacterService {
         }
     }
 
+    /**
+     * 캐릭터의 장비 정보를 조회합니다.
+     * @param ocid
+     * @return
+     * @throws CharacterNotFoundException
+     */
+    public CharacterEquipInfoResponse getCharacterEquipInfo(String ocid) {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String date = yesterday.format(formatter);
+
+        String url = createUrl("/maplestory/v1/character/item-equipment", ocid, date);
+        ResponseEntity<CharacterEquipInfoResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                createRequestEntity(),
+                CharacterEquipInfoResponse.class
+        );
+        log.info("CharacterEquipInfoResponse: {}", response);
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new CharacterNotFoundException("Failed to fetch character equip info: " + response.getStatusCode());
+        }
+    }
 }
