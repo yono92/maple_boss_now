@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final JwtProvider jwtProvider;
 
     @Bean
@@ -28,7 +29,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/icons/**", "/api/v1/search/**", "/login/oauth2/**").permitAll() // 인증 없이 접근 가능
+                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/icons/**", "/api/v1/search/**", "/login/oauth2/**" ,"/signup").permitAll() // 인증 없이 접근 가능
                         .requestMatchers("/dashboard/**", "/profile/**", "/settings/**").authenticated() // 인증 필요한 경로
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
