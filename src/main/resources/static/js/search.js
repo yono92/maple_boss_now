@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     displayNoResults();
                 }
             } catch (error) {
-                console.error("Fetch error:", error);
                 displayNoResults();
             }
         }
