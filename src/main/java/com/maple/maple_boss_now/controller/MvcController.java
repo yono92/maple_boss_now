@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class LoginController {
+public class MvcController {
 
     /**
      * 로그인 페이지 이동 Mvc컨트롤러
@@ -28,5 +28,28 @@ public class LoginController {
     @GetMapping("/signup")
     public String ShowSignUpPage() {
         return "signup";
+    }
+
+    /**
+     * 메인 페이지 이동 Mvc컨트롤러
+     *
+     * @return index.html
+     * @version 1.0
+     * @since 2024-06-14
+     */
+    @GetMapping("/")
+    public String ShowIndexPage() {
+        return "index";
+    }
+    /**
+     * 보스 목록 페이지 이동 Mvc컨트롤러
+     *
+     * @return boss.html
+     * @version 1.0
+     * @since 2024-06-14
+     */
+    @GetMapping("/boss")
+    public String ShowBossPage() {
+        return "boss";
     }
 }
