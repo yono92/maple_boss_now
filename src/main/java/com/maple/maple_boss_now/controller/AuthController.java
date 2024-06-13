@@ -65,4 +65,15 @@ public class AuthController {
             return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
         }
     }
+
+    // JWT 토큰 검증 엔드포인트
+    @GetMapping("/token/validate")
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        boolean isValid = jwtProvider.validateToken(token);
+        return ResponseEntity.status(isValid ? HttpStatus.OK : HttpStatus.UNAUTHORIZED).body(null);
+    }
 }

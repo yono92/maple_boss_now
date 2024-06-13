@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String userId = jwtProvider.getUserIdFromToken(jwt);
 
             // Redis에서 토큰 확인
-            String storedUserId = jwtProvider.getUserIdFromToken(jwt);
+            String storedUserId = jwtProvider.getUserIdFromRedis(jwt);
 
             if (userId.equals(storedUserId)) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userId);

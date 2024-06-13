@@ -3,22 +3,21 @@ package com.maple.maple_boss_now.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JwtProvider {
 
     @Value("${jwt.secret}")
@@ -28,18 +27,7 @@ public class JwtProvider {
     private long expiration;
 
     private final RedisTemplate<String, String> redisTemplate;
-
-    private SecretKey key; // 필드로 SecretKey 추가
-
-    public JwtProvider(RedisTemplate<String, String> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
-    @PostConstruct
-    private void init() {
-        // PostConstruct 메서드에서 SecretKey 생성
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-    }
+    private final SecretKey key; // 변경된 부분: 이제 SecretKey는 JwtConfig에서 제공됨
 
     public String generateToken(String userId) {
         Date now = new Date();
@@ -49,7 +37,7 @@ public class JwtProvider {
                 .setSubject(userId)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(key, SignatureAlgorithm.HS512) // SecretKey를 사용
+                .signWith(key)
                 .compact();
 
         // Redis에 저장 (만료 시간을 함께 저장)
@@ -60,7 +48,7 @@ public class JwtProvider {
 
     public String getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key) // SecretKey를 사용
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -69,13 +57,10 @@ public class JwtProvider {
 
     public boolean validateToken(String token) {
         try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key) // SecretKey를 사용
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
             return claims.getExpiration().after(new Date());
         } catch (Exception e) {
+            log.error("Invalid JWT Token", e);
             return false;
         }
     }
@@ -91,5 +76,10 @@ public class JwtProvider {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    // Redis에서 토큰으로 사용자 ID 가져오기
+    public String getUserIdFromRedis(String token) {
+        return redisTemplate.opsForValue().get(token);
     }
 }

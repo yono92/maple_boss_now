@@ -26,20 +26,24 @@ document.getElementById('signup-form').addEventListener('submit', function(event
         },
         body: JSON.stringify(data)
     })
-        .then(response => response.json().then(data => ({ status: response.status, body: data })))
-        .then(result => {
-            if (result.status === 200) {
-                showNotification('Signup successful!', 'success');
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000); // 2초 후 로그인 페이지로 리다이렉트
+        .then(response => {
+            if (response.ok) {
+                return response.text(); // 응답을 텍스트로 파싱
             } else {
-                showNotification(result.body.error || 'Signup failed', 'error');
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Signup failed');
+                });
             }
+        })
+        .then(message => {
+            showNotification(message, 'success');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000); // 2초 후 로그인 페이지로 리다이렉트
         })
         .catch(error => {
             console.error('Error during signup:', error);
-            showNotification('An error occurred during signup', 'error');
+            showNotification(error.message || 'An error occurred during signup', 'error');
         });
 });
 

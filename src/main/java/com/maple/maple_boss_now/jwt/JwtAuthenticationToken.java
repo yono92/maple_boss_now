@@ -1,48 +1,34 @@
 package com.maple.maple_boss_now.jwt;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
-        private final Object principal;
-        private String credentials;
+    private final Object principal;
+    private final String token;
 
-        public JwtAuthenticationToken(Object principal, String credentials) {
-            super(null);
-            this.principal = principal;
-            this.credentials = credentials;
-            setAuthenticated(false);
-        }
+    public JwtAuthenticationToken(Object principal, String token, Collection<? extends GrantedAuthority> authorities) {
+        super(authorities);
+        this.principal = principal;
+        this.token = token;
+        setAuthenticated(true); // 인증된 상태로 설정
+    }
 
-        public JwtAuthenticationToken(Object principal, String credentials, Object authorities) {
-            super(null);
-            this.principal = principal;
-            this.credentials = credentials;
-            setAuthenticated(true);
-        }
+    public String getToken() {
+        return token;
+    }
 
-        @Override
-        public Object getCredentials() {
-            return credentials;
-        }
+    @Override
+    public Object getCredentials() {
+        return null;
+    }
 
-        @Override
-        public Object getPrincipal() {
-            return principal;
-        }
-
-        @Override
-        public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-            if (isAuthenticated) {
-                throw new IllegalArgumentException("Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
-            }
-
-            super.setAuthenticated(false);
-        }
-
-        @Override
-        public void eraseCredentials() {
-            super.eraseCredentials();
-            credentials = null;
-        }
+    @Override
+    public Object getPrincipal() {
+        return principal;
+    }
 }
