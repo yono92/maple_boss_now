@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
+    private final UserDetailsService userDetailsService; // 이 필드는 CustomUserDetailsService로 주입됨
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,7 +31,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/icons/**", "/api/v1/search/**", "/login/oauth2/**" ,"/signup").permitAll() // 인증 없이 접근 가능
+                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/icons/**", "/api/v1/search/**", "/login/oauth2/**", "/signup").permitAll() // 인증 없이 접근 가능
                         .requestMatchers("/dashboard/**", "/profile/**", "/settings/**").authenticated() // 인증 필요한 경로
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -43,7 +45,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                 );
 
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

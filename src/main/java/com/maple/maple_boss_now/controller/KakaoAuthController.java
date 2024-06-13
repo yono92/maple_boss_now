@@ -59,14 +59,14 @@ public class KakaoAuthController {
             user = userRepository.save(kakaoUser);
         }
 
-
         // 4. JWT 생성
         String jwtToken = jwtProvider.generateToken(user.getId().toString());
         log.info("JWT token: " + jwtToken);
-        // 5. JWT를 클라이언트로 전달 (예: 리다이렉트)
+
+        // 5. JWT를 클라이언트로 전달 (예: 쿠키 또는 리다이렉트)
+        response.addHeader("Authorization", "Bearer " + jwtToken);
         response.sendRedirect("/?token=" + jwtToken);
     }
-
 
     // 토큰 요청 메서드
     private String getKakaoToken(String code) {

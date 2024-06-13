@@ -1,70 +1,88 @@
 package com.maple.maple_boss_now.jwt;
 
-
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
 public class JwtProvider {
 
     @Value("${jwt.secret}")
-    private String jwtSecret;
+    private String secret;
 
     @Value("${jwt.expiration}")
-    private long jwtExpirationInMs;
+    private long expiration;
 
-    // JWT 토큰 생성
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public JwtProvider(RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
     public String generateToken(String userId) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        Date expiryDate = new Date(now.getTime() + expiration);
 
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(userId)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes()) // Secret을 bytes로 변환
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
+
+        // Redis에 저장 (만료 시간을 함께 저장)
+        redisTemplate.opsForValue().set(token, userId, expiration, TimeUnit.MILLISECONDS);
+
+        return token;
     }
 
-    // JWT 토큰에서 사용자 이름 (ID) 가져오기
-    public String getUserNameFromJwt(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret.getBytes()) // Secret을 bytes로 변환
-                .build()
+    public String getUserIdFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(secret)
                 .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject();
+                .getBody()
+                .getSubject();
     }
 
-    // JWT 토큰 검증
-    public boolean validateToken(String authToken) {
+    public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(jwtSecret.getBytes()) // Secret을 bytes로 변환
-                    .build()
-                    .parseClaimsJws(authToken);
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+
+            // Redis에서 토큰 존재 여부 확인
+            String userId = redisTemplate.opsForValue().get(token);
+            if (userId == null) {
+                return false; // Redis에 없으면 유효하지 않음
+            }
             return true;
         } catch (Exception e) {
             log.error("Invalid JWT token", e);
+            return false;
         }
-        return false;
     }
 
-    // 요청에서 JWT 토큰 추출
+    public void deleteToken(String token) {
+        // Redis에서 토큰 삭제
+        redisTemplate.delete(token);
+    }
+
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
+    }
+    //storeToken
+    public void storeToken(String userId, String token) {
+        // Redis에 저장 (만료 시간을 함께 저장)
+        redisTemplate.opsForValue().set(token, userId, expiration, TimeUnit.MILLISECONDS);
     }
 }
