@@ -3,6 +3,7 @@ package com.maple.maple_boss_now.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,11 @@ public class JwtProvider {
     private long expiration;
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final SecretKey key; // 변경된 부분: 이제 SecretKey는 JwtConfig에서 제공됨
+
+    // SecretKey를 생성하는 메서드
+    private SecretKey getKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateToken(String userId) {
         Date now = new Date();
@@ -37,7 +42,7 @@ public class JwtProvider {
                 .setSubject(userId)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(key)
+                .signWith(getKey(), SignatureAlgorithm.HS512)
                 .compact();
 
         // Redis에 저장 (만료 시간을 함께 저장)
@@ -48,7 +53,7 @@ public class JwtProvider {
 
     public String getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -57,8 +62,8 @@ public class JwtProvider {
 
     public boolean validateToken(String token) {
         try {
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-            return claims.getExpiration().after(new Date());
+            Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token);
+            return true;
         } catch (Exception e) {
             log.error("Invalid JWT Token", e);
             return false;
@@ -66,7 +71,6 @@ public class JwtProvider {
     }
 
     public void deleteToken(String token) {
-        // Redis에서 토큰 삭제
         redisTemplate.delete(token);
     }
 
@@ -78,7 +82,6 @@ public class JwtProvider {
         return null;
     }
 
-    // Redis에서 토큰으로 사용자 ID 가져오기
     public String getUserIdFromRedis(String token) {
         return redisTemplate.opsForValue().get(token);
     }
