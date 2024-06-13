@@ -1,12 +1,9 @@
 package com.maple.maple_boss_now.controller;
 
-import ch.qos.logback.core.model.Model;
 import com.maple.maple_boss_now.entity.User;
 import com.maple.maple_boss_now.jwt.JwtProvider;
 import com.maple.maple_boss_now.model.AuthProvider;
 import com.maple.maple_boss_now.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +11,11 @@ import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
@@ -39,7 +36,6 @@ public class KakaoAuthController {
 
     @GetMapping("/login/oauth2/code/kakao")
     public void kakaoCallback(@RequestParam String code, HttpServletResponse response) throws IOException {
-        // 디버깅: 받은 코드 출력
         log.info("Received code: " + code);
 
         // 1. 받은 코드로 토큰 요청
@@ -54,18 +50,25 @@ public class KakaoAuthController {
         Optional<User> userOptional = userRepository.findByKakaoId(kakaoUser.getKakaoId());
         User user;
         if (userOptional.isPresent()) {
+            log.info("User already exists: " + userOptional.get());
             user = userOptional.get();
         } else {
-            user = userRepository.save(kakaoUser);
+            log.info("Creating new user with Kakao ID: " + kakaoUser.getKakaoId());
+            user = new User();
+            user.setKakaoId(kakaoUser.getKakaoId());
+            user.setUsername(kakaoUser.getUsername());
+            user.setEmail(kakaoUser.getEmail()); // null일 수 있음
+            user.setProvider(AuthProvider.KAKAO);
+            user = userRepository.save(user);
+            log.info("New user created: " + user);
         }
 
         // 4. JWT 생성
         String jwtToken = jwtProvider.generateToken(user.getId().toString());
         log.info("JWT token: " + jwtToken);
 
-        // 5. JWT를 클라이언트로 전달 (예: 쿠키 또는 리다이렉트)
-        response.addHeader("Authorization", "Bearer " + jwtToken);
-        response.sendRedirect("/?token=" + jwtToken);
+        // 5. JWT를 클라이언트로 전달 (예: 리다이렉트)
+        response.sendRedirect("/login?token=" + jwtToken);
     }
 
     // 토큰 요청 메서드
@@ -85,6 +88,7 @@ public class KakaoAuthController {
         ResponseEntity<Map> response = restTemplate.exchange(tokenEndpoint, HttpMethod.POST, requestEntity, Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
+            log.info("Access token response: " + response.getBody());
             return response.getBody().get("access_token").toString();
         } else {
             log.error("Failed to retrieve access token. Response: {}", response);
@@ -103,13 +107,14 @@ public class KakaoAuthController {
         ResponseEntity<Map> response = restTemplate.exchange(userEndpoint, HttpMethod.GET, requestEntity, Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            Map<String, Object> kakaoAccount = (Map<String, Object>) response.getBody().get("kakao_account");
+            log.info("User info response: " + response.getBody());
+            Map<String, Object> responseBody = response.getBody();
+            Map<String, Object> kakaoAccount = (Map<String, Object>) responseBody.get("kakao_account");
             Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
 
             User user = new User();
-            user.setKakaoId(response.getBody().get("id").toString());
-            user.setUsername(profile.get("nickname").toString());
-            user.setEmail((String) kakaoAccount.get("email"));
+            user.setKakaoId(responseBody.get("id").toString());
+            user.setUsername(profile.get("nickname").toString()); // "nickname" 으로 변경
             user.setProvider(AuthProvider.KAKAO);
 
             return user;

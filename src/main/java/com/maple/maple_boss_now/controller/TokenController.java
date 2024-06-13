@@ -18,24 +18,24 @@ public class TokenController {
     private final JwtProvider jwtProvider;
 
     @PostMapping
-    public ResponseEntity<?> saveToken(@RequestBody Map<String, String> payload) {
-        String token = payload.get("token");
+    public ResponseEntity<String> saveToken(@RequestBody Map<String, String> body) {
+        String token = body.get("token");
         if (jwtProvider.validateToken(token)) {
-            String userId = jwtProvider.getUserIdFromToken(token);
-            jwtProvider.storeToken(userId, token);
-            return ResponseEntity.ok().build();
+            // 토큰이 유효하면 Redis에 저장하는 방식은 이미 jwtProvider에서 처리됨.
+            return ResponseEntity.ok("Token saved");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+            return ResponseEntity.badRequest().body("Invalid token");
         }
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<?> validateToken(HttpServletRequest request) {
-        String token = jwtProvider.resolveToken(request);
+    public ResponseEntity<Void> validateToken(HttpServletRequest request) {
+        String token = jwtProvider.getJwtFromRequest(request);
         if (token != null && jwtProvider.validateToken(token)) {
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or missing token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
 }

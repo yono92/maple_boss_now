@@ -1,13 +1,15 @@
 package com.maple.maple_boss_now.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -45,25 +47,18 @@ public class JwtProvider {
     }
 
     public String getUserIdFromToken(String token) {
-        return Jwts.parser()
+        Claims claims = Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+        return claims.getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-
-            // Redis에서 토큰 존재 여부 확인
-            String userId = redisTemplate.opsForValue().get(token);
-            if (userId == null) {
-                return false; // Redis에 없으면 유효하지 않음
-            }
-            return true;
+            Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+            return claims.getExpiration().after(new Date());
         } catch (Exception e) {
-            log.error("Invalid JWT token", e);
             return false;
         }
     }
@@ -73,16 +68,11 @@ public class JwtProvider {
         redisTemplate.delete(token);
     }
 
-    public String resolveToken(HttpServletRequest request) {
+    public String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
-    }
-    //storeToken
-    public void storeToken(String userId, String token) {
-        // Redis에 저장 (만료 시간을 함께 저장)
-        redisTemplate.opsForValue().set(token, userId, expiration, TimeUnit.MILLISECONDS);
     }
 }

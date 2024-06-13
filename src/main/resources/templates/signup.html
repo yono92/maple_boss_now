@@ -6,6 +6,7 @@
     <title>Sign Up - Maple Boss Now</title>
     <link th:href="@{/css/output.css}" rel="stylesheet">
     <script defer th:src="@{/js/dark-mode-toggle.js}"></script>
+    <script defer th:src="@{/js/signup.js}"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen dark:bg-gray-900 dark:text-gray-100">
 
@@ -25,6 +26,14 @@
             <label for="signup-password-confirm" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
             <input type="password" id="signup-password-confirm" name="password_confirm" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md dark:bg-gray-900 dark:text-gray-200" required>
         </div>
+        <div>
+            <label for="signup-username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+            <input type="text" id="signup-username" name="username" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md dark:bg-gray-900 dark:text-gray-200" required>
+        </div>
+        <div>
+            <label for="signup-phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+            <input type="text" id="signup-phone" name="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md dark:bg-gray-900 dark:text-gray-200" required>
+        </div>
         <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-500">Sign Up</button>
     </form>
     <p class="mt-4 text-center text-gray-600 dark:text-gray-400">
@@ -32,10 +41,14 @@
     </p>
 </div>
 
+
+
+<!-- Notification Container -->
+<div id="notification-container" class="fixed top-4 right-4"></div>
 <!-- Dark Mode Toggle Button -->
 <button id="dark-mode-toggle" class="fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-md hover:bg-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition">
-    <img id="sun-icon" th:src="@{../icons/sun.svg}" class="hidden w-6 h-6" alt="Sun Icon">
-    <img id="moon-icon" th:src="@{../icons/moon.svg}" class="w-6 h-6" alt="Moon Icon">
+    <img id="sun-icon" th:src="@{/icons/sun.svg}" class="hidden w-6 h-6" alt="Sun Icon">
+    <img id="moon-icon" th:src="@{/icons/moon.svg}" class="w-6 h-6" alt="Moon Icon">
 </button>
 
 </body>

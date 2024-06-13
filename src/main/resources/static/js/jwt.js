@@ -32,6 +32,7 @@ async function isTokenValid() {
         const response = await fetch('/api/token/validate', {
             method: 'GET',
             headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -48,6 +49,7 @@ window.onload = async function() {
     if (token) {
         const saved = await saveTokenToServer(token);
         if (saved) {
+            localStorage.setItem('jwtToken', token); // 저장 후 로컬 스토리지에 저장
             // URL에서 토큰을 제거하기 위해 페이지 리로드
             window.history.replaceState({}, document.title, "/");
         }
