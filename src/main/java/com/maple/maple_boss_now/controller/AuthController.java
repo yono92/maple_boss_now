@@ -6,6 +6,7 @@ import com.maple.maple_boss_now.entity.User;
 import com.maple.maple_boss_now.jwt.JwtProvider;
 import com.maple.maple_boss_now.model.AuthProvider;
 import com.maple.maple_boss_now.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -56,7 +58,7 @@ public class AuthController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                String token = jwtProvider.generateToken(user.getId().toString());
+                String token = jwtProvider.generateToken(user.getId().toString(), user.getUsername()); // username 추가
                 return ResponseEntity.ok().body(Map.of("token", token)); // JWT 토큰을 JSON 형식으로 반환
             } else {
                 return new ResponseEntity<>("Invalid password", HttpStatus.UNAUTHORIZED);
@@ -66,14 +68,20 @@ public class AuthController {
         }
     }
 
-    // JWT 토큰 검증 엔드포인트
     @GetMapping("/token/validate")
-    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
+    public Map<String, Object> validateToken(@RequestHeader("Authorization") String tokenHeader) {
+        Map<String, Object> response = new HashMap<>();
+        String token = tokenHeader.replace("Bearer ", "");
+        boolean valid = jwtProvider.validateToken(token);
+
+        response.put("valid", valid);
+
+        if (valid) {
+            Claims claims = jwtProvider.getClaimsFromToken(token);
+            String username = claims.get("username", String.class); // 사용자 이름 추출
+            response.put("username", username);
         }
 
-        boolean isValid = jwtProvider.validateToken(token);
-        return ResponseEntity.status(isValid ? HttpStatus.OK : HttpStatus.UNAUTHORIZED).body(null);
+        return response;
     }
 }
