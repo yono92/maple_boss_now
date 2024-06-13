@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/search")
+@RequestMapping("/api/v1")
 public class SearchController {
 
     private final SearchService searchService;
 
-    @GetMapping("/character")
+    @GetMapping("/search/character")
     public ResponseEntity<CharacterDetailsResponse> getCharacterInfo(@RequestParam String characterName) {
         return ResponseEntity.ok(searchService.getCharacterDetailsByName(characterName));
     }

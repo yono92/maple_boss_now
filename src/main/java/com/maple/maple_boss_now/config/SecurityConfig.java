@@ -33,8 +33,10 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/icons/**", "/api/v1/search/**", "/login/oauth2/**", "/signup").permitAll() // 인증 없이 접근 가능
-                        .requestMatchers("/dashboard/**", "/profile/**", "/settings/**").authenticated() // 인증 필요한 경로
+                        .requestMatchers("/", "/login", "/signup", "/login/oauth2/**").permitAll() // 인증 없이 접근 가능
+                        .requestMatchers("/api/v1/**").permitAll() // /api/v1/** 경로 허용
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/icons/**").permitAll() // 정적 리소스 허용
+                        .anyRequest().authenticated() // 기타 모든 요청은 인증 필요
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))

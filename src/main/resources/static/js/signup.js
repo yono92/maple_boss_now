@@ -19,21 +19,22 @@ document.getElementById('signup-form').addEventListener('submit', function(event
         password: password
     };
 
-    fetch('/signup', {
+    fetch('/api/v1/signup', {  // 엔드포인트를 /api/v1/signup으로 설정
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     })
-        .then(response => {
-            if (response.ok) {
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(result => {
+            if (result.status === 200) {
                 showNotification('Signup successful!', 'success');
                 setTimeout(() => {
                     window.location.href = '/login';
                 }, 2000); // 2초 후 로그인 페이지로 리다이렉트
             } else {
-                showNotification('Signup failed', 'error');
+                showNotification(result.body.error || 'Signup failed', 'error');
             }
         })
         .catch(error => {
