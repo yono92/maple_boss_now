@@ -1,87 +1,77 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const toggleDaily = document.getElementById("toggle-daily");
     const toggleWeekly = document.getElementById("toggle-weekly");
     const toggleMonthly = document.getElementById("toggle-monthly");
-    const dailyBossList = document.getElementById("daily-bosses");
-    const weeklyBossList = document.getElementById("weekly-bosses");
-    const monthlyBossList = document.getElementById("monthly-bosses");
+    const bossList = document.getElementById("boss-list");
+    const bossContent = document.getElementById("boss-content");
 
-    toggleDaily.addEventListener("click", () => toggleList(dailyBossList, toggleDaily));
-    toggleWeekly.addEventListener("click", () => toggleList(weeklyBossList, toggleWeekly));
-    toggleMonthly.addEventListener("click", () => toggleList(monthlyBossList, toggleMonthly));
+    toggleWeekly.addEventListener("click", () => loadBosses('주간보스'));
+    toggleMonthly.addEventListener("click", () => loadBosses('월간보스'));
 
-    fetch('/api/v1/bosses')
-        .then(response => response.json())
-        .then(bosses => {
-            const groupedBosses = bosses.reduce((acc, boss) => {
-                if (!acc[boss.category]) acc[boss.category] = {};
-                if (!acc[boss.category][boss.name]) acc[boss.category][boss.name] = [];
-                acc[boss.category][boss.name].push(boss);
-                return acc;
-            }, {});
+    function loadBosses(category) {
+        fetch('/api/v1/bosses')
+            .then(response => response.json())
+            .then(bosses => {
+                bossList.innerHTML = ''; // 기존 내용 제거
+                const groupedBosses = groupBossesByName(bosses.filter(boss => boss.category === category));
+                renderBossCards(groupedBosses);
+            })
+            .catch(error => console.error('Error fetching boss data:', error));
+    }
 
-            renderBosses(groupedBosses, "일일 보스", dailyBossList);
-            renderBosses(groupedBosses, "주간 보스", weeklyBossList);
-            renderBosses(groupedBosses, "월간 보스", monthlyBossList);
-        })
-        .catch(error => console.error('Error fetching boss data:', error));
-});
+    function groupBossesByName(bosses) {
+        return bosses.reduce((acc, boss) => {
+            if (!acc[boss.name]) acc[boss.name] = [];
+            acc[boss.name].push(boss);
+            return acc;
+        }, {});
+    }
 
-function toggleList(list, toggle) {
-    const arrowIcon = toggle.querySelector("svg");
-    const isHidden = list.classList.toggle("hidden");
-    arrowIcon.classList.toggle("rotate-180", !isHidden);
-}
-
-function renderBosses(groupedBosses, category, list) {
-    if (groupedBosses[category]) {
-        Object.keys(groupedBosses[category]).forEach(bossName => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `
-                <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center cursor-pointer" onclick="toggleSubList('${category}', '${bossName}')">
-                    ${bossName}
-                    <svg class="h-6 w-6 ml-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </h4>
-                <ul id="${category}-${bossName}" class="hidden pl-4 space-y-1">
-                    ${groupedBosses[category][bossName].map(boss => `
-                        <li class="cursor-pointer hover:underline" onclick="showBossContent(${JSON.stringify(boss)})">
-                            ${boss.difficulty}
-                        </li>
-                    `).join('')}
-                </ul>
+    function renderBossCards(groupedBosses) {
+        Object.keys(groupedBosses).forEach(bossName => {
+            const bosses = groupedBosses[bossName];
+            const bossCard = document.createElement('div');
+            bossCard.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4';
+            bossCard.innerHTML = `
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">${bossName}</h3>
+                ${bosses.length > 1 ? `
+                    <label for="${bossName}-difficulty" class="block mb-1">난이도 선택:</label>
+                    <select id="${bossName}-difficulty" class="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 p-2 rounded-md w-full">
+                        ${bosses.map(boss => `<option value="${boss.id}">${boss.difficulty}</option>`).join('')}
+                    </select>
+                ` : `
+                    <p>난이도: ${bosses[0].difficulty}</p>
+                `}
+                <button class="bg-blue-600 text-white py-1 px-2 rounded hover:bg-blue-500" onclick='showBossContent("${bossName}", ${bosses.length > 1})'>자세히 보기</button>
             `;
-            list.appendChild(listItem);
+            bossList.appendChild(bossCard);
         });
     }
-}
 
-function toggleSubList(category, bossName) {
-    const subList = document.getElementById(`${category}-${bossName}`);
-    const arrowIcon = subList.previousElementSibling.querySelector("svg");
-    const isHidden = subList.classList.toggle("hidden");
-    arrowIcon.classList.toggle("rotate-180", !isHidden);
-}
-
-function showBossContent(boss) {
-    const bossContent = document.getElementById('boss-content');
-    bossContent.innerHTML = `
-        <h2 class="text-2xl font-bold mb-4">${boss.name} (${boss.category})</h2>
-        <p>난이도: ${boss.difficulty}</p>
-        <p>${boss.description}</p>
-        <!-- 난이도별 게시판 목록을 여기에 추가 -->
-        <div>
-            <h3 class="text-xl font-semibold mt-6">게시판</h3>
-            <ul>
-                ${boss.boards.map(board => `
-                    <li>
-                        <a href="/boss/board/${board.id}" class="text-blue-600 hover:underline">${board.title}</a>
-                        <p>${board.content}</p>
-                        <small>작성자: ${board.author}</small>
-                    </li>
-                `).join('')}
-            </ul>
-        </div>
-    `;
-}
+    window.showBossContent = (bossName, hasMultipleDifficulties) => {
+        const selectedDifficulty = hasMultipleDifficulties ? document.getElementById(`${bossName}-difficulty`).value : null;
+        const url = selectedDifficulty ? `/api/v1/boss/${selectedDifficulty}` : `/api/v1/bosses?name=${bossName}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(boss => {
+                bossContent.classList.remove('hidden');
+                bossContent.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-4">${boss.name} (${boss.category})</h2>
+                    <p>난이도: ${boss.difficulty}</p>
+                    <p>${boss.description || "보스에 대한 설명이 없습니다."}</p>
+                    <div>
+                        <h3 class="text-xl font-semibold mt-6">게시판</h3>
+                        <ul>
+                            ${boss.boards.map(board => `
+                                <li>
+                                    <a href="/boss/board/${board.id}" class="text-blue-600 hover:underline">${board.title}</a>
+                                    <p>${board.content}</p>
+                                    <small>작성자: ${board.author}</small>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            })
+            .catch(error => console.error('Error fetching boss content:', error));
+    }
+});
