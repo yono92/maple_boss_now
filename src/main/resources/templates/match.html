@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boss List - Maple Boss Now</title>
+    <title>Boss Matchmaking - Maple Boss Now</title>
     <link th:href="@{/css/output.css}" rel="stylesheet">
-    <script defer th:src="@{/js/boss.js}"></script>
-    <script defer th:src="@{/js/dark-mode-toggle.js}"></script>
+    <script defer th:src="@{/js/match.js}"></script>
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
 
@@ -25,16 +24,28 @@
 
 <!-- Main Layout -->
 <div class="container mx-auto flex flex-1 mt-8 mb-4">
-    <aside class="w-1/4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-        <ul>
-            <li><button id="toggle-weekly" class="w-full text-left py-2 px-3 rounded-lg bg-gray-200 dark:bg-gray-700">주간 보스</button></li>
-            <li><button id="toggle-monthly" class="w-full text-left py-2 px-3 rounded-lg bg-gray-200 dark:bg-gray-700 mt-2">월간 보스</button></li>
-        </ul>
-    </aside>
+    <main class="flex-1">
+        <div id="boss-details" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <!-- 보스 정보가 여기에 표시됩니다. -->
+        </div>
 
-    <main class="flex-1 ml-4">
-        <div id="boss-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <!-- 보스 카드가 여기에 표시됩니다. -->
+        <div id="matches" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-4">
+            <!-- 매칭 정보가 여기에 표시됩니다. -->
+        </div>
+
+        <div id="create-match" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-4">
+            <h2 class="text-2xl font-bold mb-4">새 매칭 생성</h2>
+            <form id="match-form">
+                <div class="mb-4">
+                    <label for="match-description" class="block text-sm font-medium">매칭 설명</label>
+                    <textarea id="match-description" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="match-availability" class="block text-sm font-medium">가능 시간</label>
+                    <input type="datetime-local" id="match-availability" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded" required />
+                </div>
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded">매칭 생성</button>
+            </form>
         </div>
     </main>
 </div>

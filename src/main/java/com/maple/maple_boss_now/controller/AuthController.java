@@ -68,7 +68,6 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/token/validate")
     public Map<String, Object> validateToken(@RequestHeader("Authorization") String tokenHeader) {
         Map<String, Object> response = new HashMap<>();
         String token = tokenHeader.replace("Bearer ", "");

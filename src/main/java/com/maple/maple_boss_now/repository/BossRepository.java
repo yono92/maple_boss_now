@@ -6,4 +6,7 @@ import java.util.List;
 
 public interface BossRepository extends JpaRepository<Boss, Long> {
     List<Boss> findByCategory(String category);
+    //save
+    //findById
+    //findAll
 }

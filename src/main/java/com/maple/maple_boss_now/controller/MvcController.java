@@ -52,4 +52,14 @@ public class MvcController {
     public String ShowBossPage() {
         return "boss";
     }
+    /**
+        * 매칭 페이지 이동 Mvc컨트롤러
+        * @return match.html
+        * @version 1.0
+        * @since 2024-06-17
+     */
+    @GetMapping("/match")
+    public String ShowMatchPage() {
+        return "match";
+    }
 }
