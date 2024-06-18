@@ -21,7 +21,7 @@ public class Match {
 
     @ManyToOne
     @JoinColumn(name = "boss_id", nullable = false)
-    private Boss boss;
+    private Boss boss; // 매칭되는 보스
 
     @Column(nullable = false)
     private LocalDateTime availability; // 매칭 가능 시간

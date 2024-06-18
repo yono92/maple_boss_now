@@ -6,7 +6,7 @@ import com.maple.maple_boss_now.entity.Match;
 import com.maple.maple_boss_now.repository.BossRepository;
 import com.maple.maple_boss_now.repository.MatchRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@RequiredArgsConstructor
+@Slf4j
 public class MatchController {
+
     private final MatchRepository matchRepository;
     private final BossRepository bossRepository;
 
@@ -26,31 +28,32 @@ public class MatchController {
     public ResponseEntity<Match> createMatch(@RequestBody MatchRequest matchRequest) {
         Optional<Boss> bossOptional = bossRepository.findById(matchRequest.getBossId());
         if (bossOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
 
         Boss boss = bossOptional.get();
         Match match = Match.builder()
                 .boss(boss)
                 .description(matchRequest.getDescription())
+                .availability(LocalDateTime.parse(matchRequest.getAvailability(), DateTimeFormatter.ISO_DATE_TIME))
                 .leader(matchRequest.getLeader())
                 .members(matchRequest.getMembers())
-                .availability(LocalDateTime.parse(matchRequest.getAvailability(), DateTimeFormatter.ISO_DATE_TIME))
                 .build();
 
         Match savedMatch = matchRepository.save(match);
         return ResponseEntity.ok(savedMatch);
     }
 
-    @GetMapping("/match/{id}")
-    public ResponseEntity<Match> getMatch(@PathVariable Long id) {
-        Optional<Match> match = matchRepository.findById(id);
-        return match.map(ResponseEntity::ok)
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/matches")
+    public ResponseEntity<List<Match>> getMatches(@RequestParam Long bossId) {
+        List<Match> matches = matchRepository.findByBossId(bossId);
+        return ResponseEntity.ok(matches);
     }
 
-    @GetMapping("/matches")
-    public List<Match> getAllMatches() {
-        return matchRepository.findAll();
+    @GetMapping("/matches/{id}")
+    public ResponseEntity<Match> getMatchById(@PathVariable Long id) {
+        return matchRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

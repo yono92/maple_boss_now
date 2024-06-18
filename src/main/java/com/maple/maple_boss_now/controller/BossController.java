@@ -34,4 +34,5 @@ public class BossController {
         Optional<Boss> boss = bossRepository.findById(id);
         return boss.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 }
