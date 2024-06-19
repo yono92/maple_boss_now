@@ -54,5 +54,15 @@ public class MatchService {
         return matchRepository.findById(id);
     }
 
-    // 추가적인 서비스 메서드들 (업데이트, 삭제 등)도 여기에 추가할 수 있습니다.
+    public Optional<Match> joinMatch(Long matchId, PartyMember member) {
+        Optional<Match> matchOptional = matchRepository.findById(matchId);
+        if (matchOptional.isPresent()) {
+            Match match = matchOptional.get();
+            match.getMembers().add(member);
+            matchRepository.save(match);
+            return Optional.of(match);
+        } else {
+            return Optional.empty();
+        }
+    }
 }

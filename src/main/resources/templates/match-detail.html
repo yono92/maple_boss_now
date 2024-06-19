@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Detail - Maple Boss Now</title>
+    <link th:href="@{/css/output.css}" rel="stylesheet">
+    <script defer th:src="@{/js/match-detail.js}"></script>
+    <script defer th:src="@{/js/dark-mode-toggle.js}"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
+
+<!-- Header -->
+<header class="bg-blue-600 text-white dark:bg-gray-800 dark:text-gray-200 py-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Maple Boss Now</h1>
+        <nav class="space-x-4">
+            <span id="user-greeting" class="hidden"></span> <!-- 사용자 이름을 표시할 곳 -->
+            <a href="/" class="hover:underline">Home</a>
+            <a href="/boss" class="hover:underline">Boss</a>
+            <a id="auth-link" th:href="@{/login}" class="hover:underline">Login</a> <!-- 로그인/로그아웃 링크 -->
+        </nav>
+    </div>
+</header>
+
+<!-- Main Layout -->
+<div class="container mx-auto flex flex-1 mt-8 mb-4">
+    <main class="flex-1">
+        <div id="match-details" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <!-- 매칭 정보가 여기에 표시됩니다. -->
+        </div>
+
+        <div id="join-match" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-4">
+            <h2 class="text-2xl font-bold mb-4">매칭 참여</h2>
+            <form id="join-match-form">
+                <div class="mb-4">
+                    <label for="member-nickname" class="block text-sm font-medium">닉네임</label>
+                    <input type="text" id="member-nickname" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required>
+                </div>
+                <div class="mb-4">
+                    <label for="member-job" class="block text-sm font-medium">직업</label>
+                    <input type="text" id="member-job" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required>
+                </div>
+                <div class="mb-4">
+                    <label for="member-level" class="block text-sm font-medium">레벨</label>
+                    <input type="number" id="member-level" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required>
+                </div>
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">참여</button>
+            </form>
+        </div>
+    </main>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-800 dark:bg-gray-900 text-white dark:text-gray-200 py-4 mt-8">
+    <div class="container mx-auto text-center">
+        <p>&copy; 2024 Maple Boss Now. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Dark Mode Toggle Button -->
+<button id="dark-mode-toggle" class="fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-md hover:bg-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition">
+    <img id="sun-icon" th:src="@{../icons/sun.svg}" class="hidden w-6 h-6" alt="Sun Icon">
+    <img id="moon-icon" th:src="@{../icons/moon.svg}" class="w-6 h-6" alt="Moon Icon">
+</button>
+</body>
+</html>

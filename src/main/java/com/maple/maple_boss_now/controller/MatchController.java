@@ -2,21 +2,18 @@ package com.maple.maple_boss_now.controller;
 
 
 import com.maple.maple_boss_now.dto.request.MatchRequest;
-import com.maple.maple_boss_now.entity.Boss;
 import com.maple.maple_boss_now.entity.Match;
 import com.maple.maple_boss_now.entity.PartyMember;
-import com.maple.maple_boss_now.repository.BossRepository;
-import com.maple.maple_boss_now.repository.MatchRepository;
 import com.maple.maple_boss_now.service.MatchService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Optional;
 
+
+@Slf4j
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -43,8 +40,25 @@ public class MatchController {
 
     @GetMapping("/matches/{id}")
     public ResponseEntity<Match> getMatchById(@PathVariable Long id) {
+        log.info("getMatchById: {}", id);
         return matchService.getMatchById(id)
                 .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/match-detail/{id}")
+    public ResponseEntity<Match> getMatchDetailById(@PathVariable Long id) {
+        log.info("getMatchDetailById: {}", id);
+        return matchService.getMatchById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/matches/{matchId}/join")
+    public ResponseEntity<?> joinMatch(@PathVariable Long matchId, @RequestBody PartyMember member) {
+
+        return matchService.joinMatch(matchId, member)
+                .map(match -> ResponseEntity.ok().body(match))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

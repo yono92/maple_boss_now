@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/login", "/signup", "/boss", "/match", "/match/**", "/login/oauth2/**").permitAll()
+                        .requestMatchers("/", "/login", "/signup", "/boss", "/match", "/match/**", "/match-detail", "/login/oauth2/**").permitAll()
                         .requestMatchers("/api/v1/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/icons/**").permitAll() // 정적 리소스 허용
                         .anyRequest().authenticated() // 기타 모든 요청은 인증 필요

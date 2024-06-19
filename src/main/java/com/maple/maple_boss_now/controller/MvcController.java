@@ -58,8 +58,16 @@ public class MvcController {
         * @version 1.0
         * @since 2024-06-17
      */
-    @GetMapping("/match")
-    public String ShowMatchPage() {
-        return "match";
+
+    /**
+     * 매칭 페이지 이동 Mvc컨트롤러
+     * @return match.html
+     * @version 1.0
+     * @since 2024-06-19
+     * @return
+     */
+    @GetMapping("/match-detail")
+    public String ShowMatchDetailPage() {
+        return "match-detail";
     }
 }
