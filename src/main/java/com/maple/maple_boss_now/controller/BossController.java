@@ -1,8 +1,6 @@
 package com.maple.maple_boss_now.controller;
 
-import com.maple.maple_boss_now.dto.MatchRequest;
 import com.maple.maple_boss_now.entity.Boss;
-import com.maple.maple_boss_now.entity.Match;
 import com.maple.maple_boss_now.repository.BossRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

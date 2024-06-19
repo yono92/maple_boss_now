@@ -1,14 +1,22 @@
-package com.maple.maple_boss_now.dto;
+package com.maple.maple_boss_now.dto.request;
 
+import com.maple.maple_boss_now.entity.PartyMember;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MatchRequest {
     private Long bossId;
+    private String matchTime; // ISO 8601 형식
+    private String leaderNickname;
+    private String leaderJob;
+    private int leaderLevel;
+    private List<PartyMember> members;
     private String description;
-    private String availability; // 매칭 가능 시간 (ISO 8601 형식의 문자열)
-    private MapleInfo leader; // 파티장 정보
-    private List<MapleInfo> members; // 파티원 리스트
 }
