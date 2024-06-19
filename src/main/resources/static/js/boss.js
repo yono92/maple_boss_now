@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(response => response.json())
             .then(matches => {
                 matchesContainer.innerHTML = matches.map(match => `
-                <div class="match-item bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow-md mb-4 cursor-pointer" onclick="location.href='/match-detail.html?matchId=${match.id}'">
+                <div class="match-item bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow-md mb-4 cursor-pointer" onclick="location.href='/match-detail?matchId=${match.id}'">
                     <p class="text-lg">${match.description}</p>
                     <p class="text-sm">가능 시간: ${new Date(match.matchTime).toLocaleString()}</p>
                 </div>
