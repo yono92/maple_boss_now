@@ -5,11 +5,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const monthlyBossList = document.getElementById("monthly-bosses");
     const bossDetails = document.getElementById("boss-details");
     const matchesContainer = document.getElementById("matches");
-    const createMatchForm = document.getElementById("create-match");
+    const noMatchesMessage = document.getElementById("no-matches");
+    const createMatchButton = document.getElementById("create-match-button");
+    const createMatchModal = document.getElementById("create-match-modal");
+    const closeModal = document.getElementById("close-modal");
     const matchForm = document.getElementById("match-form");
 
     toggleWeekly.addEventListener("click", () => toggleList(weeklyBossList, toggleWeekly));
     toggleMonthly.addEventListener("click", () => toggleList(monthlyBossList, toggleMonthly));
+
+    createMatchButton.addEventListener("click", () => {
+        createMatchModal.classList.remove("hidden");
+    });
+
+    closeModal.addEventListener("click", () => {
+        createMatchModal.classList.add("hidden");
+    });
+
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener("click", (event) => {
+        if (event.target === createMatchModal) {
+            createMatchModal.classList.add("hidden");
+        }
+    });
 
     function toggleList(list, toggleButton) {
         const arrowIcon = toggleButton.querySelector("svg");
@@ -76,8 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(response => response.json())
             .then(boss => {
                 bossDetails.classList.remove('hidden');
-                createMatchForm.classList.remove('hidden');
                 matchesContainer.classList.remove('hidden');
+                createMatchButton.classList.remove('hidden'); // 버튼이 보이도록 설정
 
                 bossDetails.innerHTML = `
                     <h2 class="text-2xl font-bold mb-4">${boss.name} (${boss.difficulty})</h2>
@@ -86,47 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
 
                 loadMatches(bossId);
-
-                // 매칭 생성 폼 제출 시 처리
-                matchForm.onsubmit = (event) => {
-                    event.preventDefault();
-
-                    const description = document.getElementById('match-description').value;
-                    const matchTime = document.getElementById('match-availability').value;
-                    const leaderNickname = document.getElementById('leader-nickname').value;
-                    const leaderJob = document.getElementById('leader-job').value;
-                    const leaderLevel = parseInt(document.getElementById('leader-level').value, 10);
-
-                    const data = {
-                        bossId: bossId,
-                        description: description,
-                        matchTime: matchTime,
-                        leaderNickname: leaderNickname,
-                        leaderJob: leaderJob,
-                        leaderLevel: leaderLevel,
-                        members: [] // 빈 배열로 설정
-                    };
-
-                    fetch('/api/v1/matches', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                alert('매칭 요청이 성공적으로 제출되었습니다.');
-                                matchForm.reset();
-                                loadMatches(bossId); // 새로 생성된 매칭 정보를 로드
-                            } else {
-                                return response.json().then(err => {
-                                    alert('매칭 요청 제출에 실패했습니다: ' + (err.error || 'Unknown error'));
-                                });
-                            }
-                        })
-                        .catch(error => console.error('Error submitting match request:', error));
-                };
             })
             .catch(error => console.error('Error fetching boss data:', error));
     };
@@ -135,16 +112,21 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`/api/v1/matches?bossId=${bossId}`)
             .then(response => response.json())
             .then(matches => {
-                matchesContainer.innerHTML = matches.map(match => `
-                <div class="match-item bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow-md mb-4 cursor-pointer" onclick="location.href='/match-detail?matchId=${match.id}'">
-                    <p class="text-lg">${match.description}</p>
-                    <p class="text-sm">가능 시간: ${new Date(match.matchTime).toLocaleString()}</p>
-                </div>
-            `).join('');
+                if (matches.length === 0) {
+                    noMatchesMessage.classList.remove('hidden');
+                    matchesContainer.innerHTML = ''; // 매칭 정보가 없으므로 비워둠
+                } else {
+                    noMatchesMessage.classList.add('hidden');
+                    matchesContainer.innerHTML = matches.map(match => `
+                        <div class="match-item bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow-md mb-4 cursor-pointer" onclick="location.href='/match-detail?matchId=${match.id}'">
+                            <p class="text-lg">${match.description}</p>
+                            <p class="text-sm">가능 시간: ${new Date(match.matchTime).toLocaleString()}</p>
+                        </div>
+                    `).join('');
+                }
             })
-
     }
 
-        // 초기 로드: 주간 보스 로드
+    // 초기 로드: 주간 보스 로드
     loadBosses('주간보스');
 });

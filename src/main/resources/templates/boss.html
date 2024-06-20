@@ -14,7 +14,6 @@
 <!-- Header -->
 <div th:replace="fragments/header :: header"></div>
 
-
 <!-- Main Layout -->
 <div class="container mx-auto flex flex-1 mt-8 mb-4">
     <aside class="w-1/4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
@@ -44,38 +43,49 @@
         <div id="boss-details" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hidden">
             <!-- 보스 정보가 여기에 표시됩니다. -->
         </div>
+        <button id="create-match-button" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition mt-4 hidden">매치 생성</button>
         <div id="matches" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-4 hidden">
             <!-- 매칭 정보가 여기에 표시됩니다. -->
+            <p id="no-matches" class="text-gray-500 dark:text-gray-400 hidden">매칭 정보가 없습니다.</p>
+
         </div>
-        <div id="create-match" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mt-4 hidden">
-            <h2 class="text-2xl font-bold mb-4">새 매칭 생성</h2>
-            <form id="match-form">
-                <div class="mb-4">
-                    <label for="match-description" class="block text-sm font-medium">매칭 설명</label>
-                    <textarea id="match-description" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required></textarea>
-                </div>
-                <div class="mb-4">
-                    <label for="match-availability" class="block text-sm font-medium">가능 시간</label>
-                    <input type="datetime-local" id="match-availability" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required />
-                </div>
-                <div class="mb-4">
-                    <label for="leader-nickname" class="block text-sm font-medium">파티장 닉네임</label>
-                    <input type="text" id="leader-nickname" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required />
-                </div>
-                <div class="mb-4">
-                    <label for="leader-job" class="block text-sm font-medium">파티장 직업</label>
-                    <input type="text" id="leader-job" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required />
-                </div>
-                <div class="mb-4">
-                    <label for="leader-level" class="block text-sm font-medium">파티장 레벨</label>
-                    <input type="number" id="leader-level" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required />
-                </div>
-                <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">매칭 생성</button>
-            </form>
+
+        <!-- 매치 생성 모달 -->
+        <div id="create-match-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-11/12 max-w-lg">
+                <button id="close-modal" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-400 float-right">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <h2 class="text-2xl font-bold mb-4">새 매칭 생성</h2>
+                <form id="match-form">
+                    <div class="mb-4">
+                        <label for="match-description" class="block text-sm font-medium">매칭 설명</label>
+                        <textarea id="match-description" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required=""></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="match-availability" class="block text-sm font-medium">가능 시간</label>
+                        <input type="datetime-local" id="match-availability" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required="">
+                    </div>
+                    <div class="mb-4">
+                        <label for="leader-nickname" class="block text-sm font-medium">파티장 닉네임</label>
+                        <input type="text" id="leader-nickname" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required="">
+                    </div>
+                    <div class="mb-4">
+                        <label for="leader-job" class="block text-sm font-medium">파티장 직업</label>
+                        <input type="text" id="leader-job" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required="">
+                    </div>
+                    <div class="mb-4">
+                        <label for="leader-level" class="block text-sm font-medium">파티장 레벨</label>
+                        <input type="number" id="leader-level" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100" required="">
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">매칭 생성</button>
+                </form>
+            </div>
         </div>
     </main>
 </div>
-
 
 <!-- Footer -->
 <div th:replace="fragments/footer :: footer"></div>
