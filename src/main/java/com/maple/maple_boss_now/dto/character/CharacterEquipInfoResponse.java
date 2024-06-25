@@ -1,4 +1,4 @@
-package com.maple.maple_boss_now.dto;
+package com.maple.maple_boss_now.dto.character;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

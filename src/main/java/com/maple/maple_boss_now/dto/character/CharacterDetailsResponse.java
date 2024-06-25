@@ -1,4 +1,4 @@
-package com.maple.maple_boss_now.dto;
+package com.maple.maple_boss_now.dto.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

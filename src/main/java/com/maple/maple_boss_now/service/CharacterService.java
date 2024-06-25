@@ -1,13 +1,12 @@
 package com.maple.maple_boss_now.service;
 
-import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
-import com.maple.maple_boss_now.dto.CharacterEquipInfoResponse;
-import com.maple.maple_boss_now.dto.CharacterInfoResponse;
-import com.maple.maple_boss_now.dto.CharacterStatInfoResponse;
+import com.maple.maple_boss_now.dto.character.CharacterBasicInfoResponse;
+import com.maple.maple_boss_now.dto.character.CharacterEquipInfoResponse;
+import com.maple.maple_boss_now.dto.character.CharacterInfoResponse;
+import com.maple.maple_boss_now.dto.character.CharacterStatInfoResponse;
 import com.maple.maple_boss_now.exception.CharacterNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,9 +21,9 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CharacterService {
 
-    private static final Logger log = LoggerFactory.getLogger(CharacterService.class);
     private final RestTemplate restTemplate;
 
     @Value("${api.domain}")

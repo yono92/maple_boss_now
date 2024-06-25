@@ -1,8 +1,6 @@
 package com.maple.maple_boss_now.controller;
 
-import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
-import com.maple.maple_boss_now.dto.CharacterDetailsResponse;
-import com.maple.maple_boss_now.service.CharacterService;
+import com.maple.maple_boss_now.dto.character.CharacterDetailsResponse;
 import com.maple.maple_boss_now.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

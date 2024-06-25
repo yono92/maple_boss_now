@@ -1,6 +1,6 @@
 package com.maple.maple_boss_now.service;
 
-import com.maple.maple_boss_now.dto.*;
+import com.maple.maple_boss_now.dto.character.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

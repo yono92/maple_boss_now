@@ -1,7 +1,7 @@
 package com.maple.maple_boss_now.openapi.characterinfo;
 
-import com.maple.maple_boss_now.dto.CharacterBasicInfoResponse;
-import com.maple.maple_boss_now.dto.CharacterInfoResponse;
+import com.maple.maple_boss_now.dto.character.CharacterBasicInfoResponse;
+import com.maple.maple_boss_now.dto.character.CharacterInfoResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
