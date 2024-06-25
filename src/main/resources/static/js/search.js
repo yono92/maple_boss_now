@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const finalStat = statInfo?.final_stat || [];
         const equipment = data.characterEquipInfo?.item_equipment || [];
 
+        const excludedStats = ['전투력', '최소 스탯공격력', '최대 스탯공격력', 'STR', 'DEX', 'INT', 'LUK', 'HP', 'MP'];
+        const filteredStats = finalStat.filter(stat => !excludedStats.includes(stat.stat_name));
+
         resultContainer.innerHTML = `
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <div class="flex flex-col items-center justify-center mb-4">
@@ -47,24 +50,49 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_class}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Class Level</p>
-                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_class_level}</p>
-                </div>
-                <div>
                     <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Level</p>
                     <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_level}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">EXP</p>
-                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_exp}</p>
-                </div>
-                <div>
-                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">EXP Rate</p>
-                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_exp_rate}</p>
-                </div>
-                <div class="col-span-2">
                     <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Guild</p>
                     <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${basicInfo.character_guild_name}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">전투력</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${finalStat.find(stat => stat.stat_name === '전투력').stat_value}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">공격력</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">
+                        ${finalStat.find(stat => stat.stat_name === '최소 스탯공격력').stat_value} ~ 
+                        ${finalStat.find(stat => stat.stat_name === '최대 스탯공격력').stat_value}
+                    </p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">STR</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${finalStat.find(stat => stat.stat_name === 'STR').stat_value}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">DEX</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${finalStat.find(stat => stat.stat_name === 'DEX').stat_value}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">INT</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${finalStat.find(stat => stat.stat_name === 'INT').stat_value}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">LUK</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${finalStat.find(stat => stat.stat_name === 'LUK').stat_value}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">HP</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${finalStat.find(stat => stat.stat_name === 'HP').stat_value}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">MP</p>
+                    <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${finalStat.find(stat => stat.stat_name === 'MP').stat_value}</p>
                 </div>
             </div>
             <div class="mt-6">
@@ -75,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </svg>
                 </h4>
                 <div class="grid grid-cols-2 gap-4 mt-4 hidden" id="stats-container">
-                    ${finalStat.map(stat => `
+                    ${filteredStats.map(stat => `
                         <div class="flex flex-col bg-gray-100 dark:bg-gray-700 p-4 rounded-md shadow-sm">
                             <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">${stat.stat_name}</p>
                             <p class="text-lg font-medium text-gray-800 dark:text-gray-100">${stat.stat_value}</p>
