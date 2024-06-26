@@ -1,4 +1,4 @@
-package com.maple.maple_boss_now.service;
+package com.maple.maple_boss_now.service.character;
 
 import com.maple.maple_boss_now.dto.character.CharacterBasicInfoResponse;
 import com.maple.maple_boss_now.dto.character.CharacterEquipInfoResponse;

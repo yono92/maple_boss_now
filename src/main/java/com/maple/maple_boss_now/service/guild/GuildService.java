@@ -34,13 +34,7 @@ public class GuildService {
         return new HttpEntity<>(headers);
     }
 
-    /**
-     * 길드의 정보를 조회합니다.
-     * @param guildName
-     * @return
-     */
-
-    public GuildInfoResponse getGuildInfo(String guildName, String worldName) {
+    public GuildInfoResponse getGuildId(String guildName, String worldName) {
         String url = UriComponentsBuilder.fromHttpUrl(apiDomain + "/maplestory/v1/guild/id")
                 .queryParam("guild_name", guildName)
                 .queryParam("world_name", worldName)
@@ -57,10 +51,9 @@ public class GuildService {
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {
-            throw new GuildNotFoundException("Failed to fetch guild info: " + response.getStatusCode());
+            throw new GuildNotFoundException("Failed to fetch guild ID: " + response.getStatusCode());
         }
     }
-
 
     public GuildBasicInfoResponse getGuildBasicInfo(String oguildId) {
         LocalDate yesterday = LocalDate.now().minusDays(1);
@@ -85,5 +78,10 @@ public class GuildService {
         } else {
             throw new GuildNotFoundException("Failed to fetch guild basic info: " + response.getStatusCode());
         }
+    }
+
+    public GuildBasicInfoResponse getGuildInfo(String guildName, String worldName) {
+        GuildInfoResponse guildInfoResponse = getGuildId(guildName, worldName);
+        return getGuildBasicInfo(guildInfoResponse.getOguild_Id());
     }
 }

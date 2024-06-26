@@ -1,10 +1,10 @@
-package com.maple.maple_boss_now.controller;
+package com.maple.maple_boss_now.controller.match;
 
 
 import com.maple.maple_boss_now.dto.request.MatchRequest;
 import com.maple.maple_boss_now.entity.Match;
 import com.maple.maple_boss_now.entity.PartyMember;
-import com.maple.maple_boss_now.service.MatchService;
+import com.maple.maple_boss_now.service.match.MatchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

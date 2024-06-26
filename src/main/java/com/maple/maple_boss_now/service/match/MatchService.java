@@ -1,4 +1,4 @@
-package com.maple.maple_boss_now.service;
+package com.maple.maple_boss_now.service.match;
 
 import com.maple.maple_boss_now.dto.request.MatchRequest;
 import com.maple.maple_boss_now.entity.Boss;
