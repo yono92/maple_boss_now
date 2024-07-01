@@ -23,5 +23,11 @@ public class GlobalExceptionHandler {
         mav.addObject("message", "An unexpected error occurred: " + ex.getMessage());
         return mav;
     }
-
+    // 일반 예외 처리 (JSON 응답)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleGenericJsonException(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "An unexpected error occurred: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
 }
