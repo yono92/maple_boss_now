@@ -44,16 +44,12 @@
                 <p id="no-results" class="text-gray-500 dark:text-gray-400 hidden">No results found</p>
             </div>
 
-            <!-- Guild Info Modal -->
-            <div id="guild-info-modal" class="hidden fixed z-50 inset-0 overflow-y-auto">
-                <div class="flex items-center justify-center min-h-screen">
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/2">
-                        <button id="close-guild-modal" class="text-gray-500 dark:text-gray-300 float-right">&times;</button>
-                        <div id="guild-info-content">
-                            <!-- Guild information will be displayed here -->
-                        </div>
-                    </div>
+            <!-- 길드 팝업 -->
+            <div id="guild-popup" class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-50 z-50">
+                <div id="guild-popup-content" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-lg">
+                    <!-- Guild information will be dynamically injected here -->
                 </div>
+                <button id="guild-popup-close" class="absolute top-0 right-0 m-4 text-gray-400 hover:text-white">&times;</button>
             </div>
 
         </div>

@@ -4,6 +4,9 @@ import com.maple.maple_boss_now.dto.guild.GuildBasicInfoResponse;
 import com.maple.maple_boss_now.dto.guild.GuildInfoResponse;
 import com.maple.maple_boss_now.exception.GuildNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GuildService {
 
     private final RestTemplate restTemplate;
@@ -48,6 +52,7 @@ public class GuildService {
                 GuildInfoResponse.class
         );
 
+
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {
@@ -55,7 +60,13 @@ public class GuildService {
         }
     }
 
+
     public GuildBasicInfoResponse getGuildBasicInfo(String oguildId) {
+        if (oguildId == null || oguildId.isEmpty()) {
+            log.error("oguild_id is null or empty");
+            throw new GuildNotFoundException("oguild_id is missing");
+        }
+
         LocalDate yesterday = LocalDate.now().minusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String date = yesterday.format(formatter);
@@ -73,6 +84,7 @@ public class GuildService {
                 GuildBasicInfoResponse.class
         );
 
+
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             return response.getBody();
         } else {
@@ -80,8 +92,9 @@ public class GuildService {
         }
     }
 
+
     public GuildBasicInfoResponse getGuildInfo(String guildName, String worldName) {
         GuildInfoResponse guildInfoResponse = getGuildId(guildName, worldName);
-        return getGuildBasicInfo(guildInfoResponse.getOguild_Id());
+        return getGuildBasicInfo(guildInfoResponse.getOguildId());
     }
 }

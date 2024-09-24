@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class GuildController {
     private final GuildService guildService;
 
-    @GetMapping("/api/v1/guild/basic-info")
+    @GetMapping("/guild/basic-info")
     public GuildBasicInfoResponse getGuildBasicInfo(@RequestParam String guildName, @RequestParam String worldName) {
         return guildService.getGuildInfo(guildName, worldName);
     }
