@@ -66,6 +66,13 @@ task buildTailwind(type: NpmTask) {
 	dependsOn installTailwind
 }
 
+bootRun {
+	dependsOn buildTailwind
+}
+
+bootJar {
+	dependsOn buildTailwind
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
