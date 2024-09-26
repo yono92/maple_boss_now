@@ -1,5 +1,6 @@
 package com.maple.maple_boss_now.entity;
 
+import com.maple.maple_boss_now.enums.BossDifficulty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,14 +13,13 @@ import lombok.*;
 public class Boss {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
-    private String difficulty;
+    private BossDifficulty difficulty;
 
     @Column(nullable = false)
     private String category; // 일일보스, 주간보스, 월간보스 구분
