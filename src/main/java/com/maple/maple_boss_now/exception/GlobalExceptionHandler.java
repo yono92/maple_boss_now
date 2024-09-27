@@ -23,5 +23,12 @@ public class GlobalExceptionHandler {
         mav.addObject("message", "An unexpected error occurred: " + ex.getMessage());
         return mav;
     }
-
+    // 404 Not Found - 길드를 찾을 수 없을 때
+    @ExceptionHandler(GuildNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleGuildNotFoundException(GuildNotFoundException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Guild not found");
+        response.put("details", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 }
